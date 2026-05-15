@@ -359,7 +359,12 @@
     }
 
     /* ── SIDEBAR ── */
-    .post-sidebar { position: sticky; top: 6rem; }
+    .post-sidebar {
+      position: sticky;
+      top: 5.5rem; /* offset clears the fixed nav bar */
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
+    }
 
     .sidebar-card {
       background: var(--cream);
