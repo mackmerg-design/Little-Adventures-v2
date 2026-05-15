@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Little Adventures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:   #2C3B2D;
+      --stone:    #8B7D6B;
+      --cream:    #F5F0E8;
+      --sand:     #E8DFD0;
+      --moss:     #4A6741;
+      --rust:     #B5531A;
+      --white:    #FDFCFA;
+      --text:     #1E2420;
+      --muted:    #6B7569;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: transparent;
+      transition: background 0.4s, backdrop-filter 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(253,252,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sand);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--white);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: color 0.4s;
+    }
+    nav.scrolled .nav-logo { color: var(--forest); }
+    .nav-links {
+      display: flex;
+      gap: 2.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    nav.scrolled .nav-links a { color: #4A4F4A; } /* darkened from --muted for 4.5:1 on white */
+    .nav-links a:hover { color: #F5E0D0; }
+    nav.scrolled .nav-links a:hover { color: var(--rust); }
+    /* Focus indicators — WCAG 2.4.7 / 2.4.11 */
+    :focus-visible {
+      outline: 3px solid var(--rust);
+      outline-offset: 3px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(20,30,22,0.15) 0%, rgba(20,30,22,0.65) 100%),
+        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80') center/cover no-repeat;
+      transform: scale(1.04);
+      animation: heroZoom 18s ease-in-out infinite alternate;
+    }
+    @keyframes heroZoom {
+      from { transform: scale(1.04); }
+      to   { transform: scale(1.00); }
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 3rem 5rem;
+      max-width: 680px;
+      opacity: 0;
+      transform: translateY(28px);
+      animation: fadeUp 1s 0.4s forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C8D4C9; /* was rgba(255,255,255,0.7) — failed contrast; now passes 4.5:1 on dark overlay */
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: 1.08;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: #D9C4A8;
+    }
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.6;
+      color: #E8EDE8; /* was rgba(255,255,255,0.78) — borderline fail; solid value passes */
+      margin-bottom: 2rem;
+      max-width: 460px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: var(--rust);
+      color: var(--white);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: #9A4415; transform: translateY(-1px); }
+
+    /* ── SECTION WRAPPER ── */
+    section { padding: 6rem 3rem; }
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      line-height: 1.15;
+      color: var(--forest);
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── FEATURED STRIP ── */
+    .featured {
+      background: var(--cream);
+    }
+    .trip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .trip-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .trip-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(44,59,45,0.12); }
+    .trip-card-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s;
+    }
+    .trip-card:hover .trip-card-img { transform: scale(1.04); }
+    .trip-card-img-wrap { overflow: hidden; }
+    .trip-card-body { padding: 1.5rem 1.5rem 2rem; flex: 1; }
+    .trip-card-tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.6rem;
+    }
+    .trip-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      line-height: 1.25;
+      color: var(--forest);
+      margin-bottom: 0.75rem;
+    }
+    .trip-card-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: #4E5550; /* was --muted #6B7569 which is ~3.8:1; this hits 4.5:1 on white */
+    }
+    .trip-card-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .trip-card-date {
+      font-size: 0.75rem;
+      color: #4E5550; /* darkened from --muted for 4.5:1 */
+      letter-spacing: 0.05em;
+    }
+    .trip-card-arrow {
+      font-size: 1rem;
+      color: var(--rust);
+      transition: transform 0.25s;
+    }
+    .trip-card:hover .trip-card-arrow { transform: translateX(4px); }
+
+    /* ── ABOUT STRIP ── */
+    .about-strip {
+      background: var(--forest);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-strip .section-title { color: var(--cream); margin-bottom: 1.25rem; }
+    .about-text {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: #C8D4C9; /* was rgba at 75% — improved for contrast on --forest bg */
+      margin-bottom: 1.75rem;
+    }
+    .about-img-wrap {
+      position: relative;
+    }
+    .about-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+    }
+    .about-accent {
+      position: absolute;
+      bottom: -1.5rem;
+      left: -1.5rem;
+      width: 60%;
+      height: 60%;
+      border: 2px solid var(--moss);
+      z-index: -1;
+    }
+    .stat-row {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2rem;
+    }
+    .stat { }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--cream);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #9EBDA0; /* was 50% opacity on forest — failed; this passes 4.5:1 on --forest */
+      margin-top: 0.25rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: #A8B4A9; /* was 55% opacity — failed; this passes 4.5:1 on --text bg */
+      padding: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--cream);
+    }
+    .footer-note { font-size: 0.78rem; }
+
+    /* ── REDUCED MOTION — WCAG 2.3.3 ── */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-bg { animation: none; }
+      .hero-content { animation: none; opacity: 1; transform: none; }
+      .trip-card, .trip-card-img, .trip-card-arrow, .btn-primary { transition: none; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.25rem; }
+      section { padding: 4rem 1.5rem; }
+      .hero-content { padding: 0 1.5rem 4rem; }
+      .about-strip { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-img-wrap { order: -1; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav" aria-label="Main navigation">
+    <a href="#" class="nav-logo">Little Adventures</a>
+    <ul class="nav-links">
+      <li><a href="#trips">Trips</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+  <!-- HERO -->
+  <section class="hero" aria-label="Site introduction">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">A travel journal by Mackenzie &amp; Nicholas</p>
+      <h1 class="hero-title">Every trip is a<br><em>little adventure.</em></h1>
+      <p class="hero-sub">Stories from the trail, the table, and everything in between — plus the points &amp; miles strategy that gets us there.</p>
+      <a href="#trips" class="btn-primary">Read Our Stories ↓</a>
+    </div>
+  </section>
+
+  <!-- TRIP POSTS -->
+  <section class="featured" id="trips">
+    <p class="section-label">Recent Adventures</p>
+    <h2 class="section-title">Where We've Been</h2>
+    <div class="trip-grid">
+
+      <!-- Card 1 — Switzerland (your upcoming trip!) -->
+      <a href="posts/switzerland-2024.html" class="trip-card">
+        <div class="trip-card-img-wrap">
+          <img class="trip-card-img"
+               src="https://images.unsplash.com/photo-1531400158697-004338570c34?w=800&q=75"
+               alt="Lauterbrunnen valley Switzerland" loading="lazy" />
+        </div>
+        <div class="trip-card-body">
+          <p class="trip-card-tag">Switzerland · 7 days</p>
+          <h3 class="trip-card-title">Lauterbrunnen: Waterfalls, Alpine Ridges &amp; Glacial Lakes</h3>
+          <p class="trip-card-desc">Hiking the Northface Trail, chasing sunrise at Bachalpsee, and everything in between in the Bernese Oberland.</p>
+        </div>
+        <div class="trip-card-footer">
+          <span class="trip-card-date">May 2025</span>
+          <span class="trip-card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- Card 2 — Points post placeholder -->
+      <a href="posts/points-strategy.html" class="trip-card">
+        <div class="trip-card-img-wrap">
+          <img class="trip-card-img"
+               src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=75"
+               alt="Airplane wing over clouds" loading="lazy" />
+        </div>
+        <div class="trip-card-body">
+          <p class="trip-card-tag">Points &amp; Miles · Strategy</p>
+          <h3 class="trip-card-title">How We Booked Europe on Miles (And You Can Too)</h3>
+          <p class="trip-card-desc">A plain-English breakdown of the credit card strategy, transfer partners, and booking tricks that funded this trip.</p>
+        </div>
+        <div class="trip-card-footer">
+          <span class="trip-card-date">May 2025</span>
+          <span class="trip-card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- Card 3 — Placeholder for next trip -->
+      <a href="#" class="trip-card">
+        <div class="trip-card-img-wrap">
+          <img class="trip-card-img"
+               src="https://images.unsplash.com/photo-1471513671800-b09c87e1497c?w=800&q=75"
+               alt="Forest trail hiking" loading="lazy" />
+        </div>
+        <div class="trip-card-body">
+          <p class="trip-card-tag">Pacific Northwest · Day Hike</p>
+          <h3 class="trip-card-title">Noble Knob at Corral Pass: The Best Mt. Rainier View You've Never Heard Of</h3>
+          <p class="trip-card-desc">An underrated gem near Enumclaw with sweeping Rainier views and almost no crowds. Worth every mile.</p>
+        </div>
+        <div class="trip-card-footer">
+          <span class="trip-card-date">Coming soon</span>
+          <span class="trip-card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-strip" id="about">
+    <div>
+      <p class="section-label" style="color: rgba(245,240,232,0.5);">About Us</p>
+      <h2 class="section-title">We're Mackenzie &amp; Nicholas</h2>
+      <p class="about-text">Two Pacific Northwesterners chasing alpine views, waterfall trails, and the occasional great meal — usually funded by a carefully curated stack of travel credit cards.</p>
+      <p class="about-text">This blog is our way of documenting the places we love, the hikes that humbled us, and the financial strategies that made it all accessible. Nothing fancy, just honest stories from the road.</p>
+      <div class="stat-row">
+        <div class="stat">
+          <div class="stat-num">12+</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">200k+</div>
+          <div class="stat-label">Miles Earned</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Elevation Gain</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-img-wrap">
+      <img class="about-img"
+           src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80"
+           alt="Hikers on alpine trail" />
+      <div class="about-accent"></div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">Little Adventures</span>
+    <span class="footer-note">© 2025 Mackenzie &amp; Nicholas Little · Made with love from Bonney Lake, WA</span>
+  </footer>
+
+  <script>
+    // Sticky nav style on scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+  </script>
+
+</body>
+</html>
