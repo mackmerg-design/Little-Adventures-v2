@@ -410,7 +410,7 @@
     <a href="index.html" class="nav-logo">Little Adventures</a>
     <ul class="nav-links">
       <li><a href="trips.html">Trips</a></li>
-      <li><a href="about.html" aria-current="page">About Us</a></li>
+      <li><a href="about.html" aria-current="page">About</a></li>
     </ul>
   </nav>
 
@@ -533,91 +533,27 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // ── Country data ──
-    // To add posts: add objects to the `posts` array for that country.
-    // Each post: { label: "Display name", url: "posts/your-file.html" }
-    // To add a new country: copy a block and update name, lat, lng, tagline, posts.
+    // ── COUNTRIES ──
+    // Master list of visited countries with coordinates and taglines.
+    // Posts are pulled automatically from posts/posts.json via the "country" field.
+    // To add a new country: add an entry here with name, lat, lng, tagline.
+    // To link a post: add "country": "Country Name" to that post in posts.json.
+    // Country names here must exactly match the "country" field in posts.json.
     const COUNTRIES = [
-      {
-        name: "England",
-        lat: 51.5, lng: -0.12,
-        tagline: "Where it all began — Thanksgiving 2021 in London.",
-        posts: []
-      },
-      {
-        name: "Scotland",
-        lat: 56.8, lng: -4.2,
-        tagline: "Highlands, castles, and probably some rain.",
-        posts: []
-      },
-      {
-        name: "France",
-        lat: 46.2, lng: 2.2,
-        tagline: "The country that takes pastries as seriously as Mackenzie does.",
-        posts: []
-      },
-      {
-        name: "Netherlands",
-        lat: 52.37, lng: 4.9,
-        tagline: "Canals, bikes, and stroopwafels.",
-        posts: []
-      },
-      {
-        name: "Belgium",
-        lat: 50.85, lng: 4.35,
-        tagline: "Chocolate, waffles, and excellent beer.",
-        posts: []
-      },
-      {
-        name: "Luxembourg",
-        lat: 49.61, lng: 6.13,
-        tagline: "Small country. Surprisingly big impression.",
-        posts: []
-      },
-      {
-        name: "Germany",
-        lat: 51.16, lng: 10.45,
-        tagline: "Christmas markets and Käsekrainer season.",
-        posts: []
-      },
-      {
-        name: "Austria",
-        lat: 47.52, lng: 14.55,
-        tagline: "Alpine roads and schnitzel.",
-        posts: []
-      },
-      {
-        name: "Spain",
-        lat: 40.46, lng: -3.74,
-        tagline: "Late dinners, good wine, better weather.",
-        posts: []
-      },
-      {
-        name: "Italy",
-        lat: 41.87, lng: 12.57,
-        tagline: "Our favorite trip so far, and there's more to write.",
-        posts: []
-      },
-      {
-        name: "Vatican City",
-        lat: 41.90, lng: 12.45,
-        tagline: "Accidentally completed the Jubilee pilgrimage. Not Catholic. 10/10.",
-        posts: []
-      },
-      {
-        name: "Canada",
-        lat: 56.13, lng: -106.35,
-        tagline: "Practically home, technically international.",
-        posts: []
-      },
-      {
-        name: "United States",
-        lat: 39.5, lng: -98.35,
-        tagline: "Home base — and still plenty left to explore.",
-        posts: [
-          { label: "Maui: Food, Waterfalls & Rainbow Trees · Nov 2025", url: "posts/2025_11_Hawaii.html" }
-        ]
-      }
+      { name: "England",       lat: 51.5,    lng: -0.12,   tagline: "Where it all began — Thanksgiving 2021 in London." },
+      { name: "Scotland",      lat: 56.8,    lng: -4.2,    tagline: "Highlands, castles, and probably some rain." },
+      { name: "France",        lat: 46.2,    lng: 2.2,     tagline: "The country that takes pastries as seriously as Mackenzie does." },
+      { name: "Netherlands",   lat: 52.37,   lng: 4.9,     tagline: "Canals, bikes, and stroopwafels." },
+      { name: "Belgium",       lat: 50.85,   lng: 4.35,    tagline: "Chocolate, waffles, and excellent beer." },
+      { name: "Luxembourg",    lat: 49.61,   lng: 6.13,    tagline: "Small country. Surprisingly big impression." },
+      { name: "Germany",       lat: 51.16,   lng: 10.45,   tagline: "Christmas markets and Käsekrainer season." },
+      { name: "Austria",       lat: 47.52,   lng: 14.55,   tagline: "Alpine roads and schnitzel." },
+      { name: "Spain",         lat: 40.46,   lng: -3.74,   tagline: "Late dinners, good wine, better weather." },
+      { name: "Italy",         lat: 41.87,   lng: 12.57,   tagline: "Our favorite trip so far, and there's more to write." },
+      { name: "Vatican City",  lat: 41.905,  lng: 12.453,  tagline: "Accidentally completed the Jubilee pilgrimage. Not Catholic. 10/10." },
+      { name: "Switzerland",   lat: 46.8,    lng: 8.2,     tagline: "72 waterfalls, glacial lakes, and legs that haven't forgiven us." },
+      { name: "Canada",        lat: 56.13,   lng: -106.35, tagline: "Practically home, technically international." },
+      { name: "United States", lat: 39.5,    lng: -98.35,  tagline: "Home base — and still plenty left to explore." },
     ];
 
     // ── Map init ──
@@ -656,27 +592,51 @@
     const iconVisited = makeIcon('#B5531A');
     const iconPosted  = makeIcon('#4A6741');
 
-    // ── Place markers ──
-    COUNTRIES.forEach(country => {
-      const hasPost = country.posts && country.posts.length > 0;
-      const icon = hasPost ? iconPosted : iconVisited;
+    // ── Fetch posts.json, merge into countries, render markers ──
+    async function initMap() {
+      let postsByCountry = {};
 
-      const tripsHtml = hasPost
-        ? `<div class="popup-trips">${country.posts.map(p =>
-            `<a class="popup-trip-link" href="${p.url}">→ ${p.label}</a>`
-          ).join('')}</div>`
-        : `<p class="popup-no-post">Post coming soon</p>`;
+      try {
+        const res = await fetch('posts/posts.json');
+        if (!res.ok) throw new Error('posts.json not found');
+        const posts = await res.json();
 
-      const popupContent = `
-        <div class="popup-country">${country.name}</div>
-        <p class="popup-tagline">${country.tagline}</p>
-        ${tripsHtml}
-      `;
+        // Sort newest first, then group by country
+        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        posts.forEach(post => {
+          if (!post.country) return;
+          if (!postsByCountry[post.country]) postsByCountry[post.country] = [];
+          postsByCountry[post.country].push(post);
+        });
+      } catch (err) {
+        console.warn('Could not load posts.json for map:', err);
+      }
 
-      L.marker([country.lat, country.lng], { icon })
-        .addTo(map)
-        .bindPopup(popupContent, { maxWidth: 260, minWidth: 200 });
-    });
+      // ── Place markers ──
+      COUNTRIES.forEach(country => {
+        const countryPosts = postsByCountry[country.name] || [];
+        const hasPost = countryPosts.length > 0;
+        const icon = hasPost ? iconPosted : iconVisited;
+
+        const tripsHtml = hasPost
+          ? `<div class="popup-trips">${countryPosts.map(p =>
+              `<a class="popup-trip-link" href="${p.slug}">→ ${p.title} · ${p.dateDisplay}</a>`
+            ).join('')}</div>`
+          : `<p class="popup-no-post">Post coming soon</p>`;
+
+        const popupContent = `
+          <div class="popup-country">${country.name}</div>
+          <p class="popup-tagline">${country.tagline}</p>
+          ${tripsHtml}
+        `;
+
+        L.marker([country.lat, country.lng], { icon })
+          .addTo(map)
+          .bindPopup(popupContent, { maxWidth: 260, minWidth: 200 });
+      });
+    }
+
+    initMap();
   </script>
 
 </body>
