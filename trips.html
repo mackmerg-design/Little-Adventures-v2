@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Trips · Little Adventures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:   #2C3B2D;
+      --stone:    #8B7D6B;
+      --cream:    #F5F0E8;
+      --sand:     #E8DFD0;
+      --moss:     #4A6741;
+      --rust:     #B5531A;
+      --white:    #FDFCFA;
+      --text:     #1E2420;
+      --muted:    #6B7569;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(253,252,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sand);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--forest);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #4A4F4A;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover,
+    .nav-links a[aria-current="page"] { color: var(--rust); }
+    :focus-visible {
+      outline: 3px solid var(--rust);
+      outline-offset: 3px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .archive-header {
+      padding: 10rem 3rem 4rem;
+      background: var(--cream);
+      border-bottom: 1px solid var(--sand);
+    }
+    .archive-header-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .archive-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.6rem;
+    }
+    .archive-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      color: var(--forest);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .archive-sub {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: #4E5550;
+      max-width: 520px;
+      line-height: 1.65;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--sand);
+      padding: 0 3rem;
+      position: sticky;
+      top: 64px;
+      z-index: 50;
+    }
+    .filter-bar-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-bar-inner::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      padding: 1rem 1.25rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #4A4F4A;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .filter-btn:hover { color: var(--rust); }
+    .filter-btn.active {
+      color: var(--rust);
+      border-bottom-color: var(--rust);
+    }
+
+    /* ── ARCHIVE GRID ── */
+    .archive-body {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 4rem 3rem 6rem;
+    }
+    .archive-count {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #4E5550;
+      margin-bottom: 2rem;
+    }
+    .trip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    /* ── TRIP CARD ── */
+    .trip-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      border: 1px solid var(--sand);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      animation: cardFadeIn 0.5s forwards;
+    }
+    @keyframes cardFadeIn {
+      to { opacity: 1; }
+    }
+    .trip-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(44,59,45,0.12); }
+    .trip-card-img-wrap { overflow: hidden; }
+    .trip-card-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s;
+    }
+    .trip-card:hover .trip-card-img { transform: scale(1.04); }
+    .trip-card-body { padding: 1.5rem 1.5rem 1.25rem; flex: 1; }
+    .trip-card-tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.6rem;
+    }
+    .trip-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      line-height: 1.28;
+      color: var(--forest);
+      margin-bottom: 0.65rem;
+    }
+    .trip-card-desc {
+      font-size: 0.875rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: #4E5550;
+    }
+    .trip-card-footer {
+      padding: 0.9rem 1.5rem;
+      border-top: 1px solid var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .trip-card-date {
+      font-size: 0.75rem;
+      color: #4E5550;
+      letter-spacing: 0.05em;
+    }
+    .trip-card-arrow {
+      font-size: 1rem;
+      color: var(--rust);
+      transition: transform 0.25s;
+    }
+    .trip-card:hover .trip-card-arrow { transform: translateX(4px); }
+
+    /* ── EMPTY / LOADING STATE ── */
+    .archive-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 0;
+      color: #4E5550;
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: #A8B4A9;
+      padding: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--cream);
+      text-decoration: none;
+    }
+    .footer-note { font-size: 0.78rem; }
+
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+      .trip-card { animation: none; opacity: 1; }
+      .trip-card, .trip-card-img, .trip-card-arrow { transition: none; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.25rem; }
+      .archive-header { padding: 8rem 1.5rem 3rem; }
+      .filter-bar { padding: 0 1.5rem; }
+      .archive-body { padding: 3rem 1.5rem 5rem; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo">Little Adventures</a>
+    <ul class="nav-links">
+      <li><a href="trips.html" aria-current="page">Trips</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- PAGE HEADER -->
+    <header class="archive-header">
+      <div class="archive-header-inner">
+        <p class="archive-eyebrow">The Full Archive</p>
+        <h1 class="archive-title">All Our Adventures</h1>
+        <p class="archive-sub">Every trip, hike, and points breakdown — in one place. Filter by category or scroll through everything.</p>
+      </div>
+    </header>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar" role="navigation" aria-label="Filter posts by category">
+      <div class="filter-bar-inner">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="europe">Europe</button>
+        <button class="filter-btn" data-filter="pacific-northwest">Pacific Northwest</button>
+        <button class="filter-btn" data-filter="points">Points &amp; Miles</button>
+      </div>
+    </div>
+
+    <!-- ARCHIVE GRID -->
+    <div class="archive-body">
+      <p class="archive-count" id="archive-count"></p>
+      <div class="trip-grid" id="trip-grid" aria-live="polite">
+        <p class="archive-empty">Loading trips&hellip;</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="index.html" class="footer-logo">Little Adventures</a>
+    <span class="footer-note">© 2026 Nicholas &amp; Mackenzie Little · Made with love from Seattle, WA</span>
+  </footer>
+
+  <script>
+    // ── Filter tags map — add new category values here as you create them ──
+    // Each post's "tag" field is matched (case-insensitive) against these keywords
+    const FILTER_KEYWORDS = {
+      'europe':           ['switzerland', 'finland', 'helsinki', 'europe'],
+      'pacific-northwest': ['pacific northwest', 'pnw', 'washington', 'rainier', 'enumclaw'],
+      'points':           ['points', 'miles', 'strategy', 'credit card'],
+    };
+
+    let allPosts = [];
+    let activeFilter = 'all';
+
+    // ── Fetch the posts manifest ──
+    async function loadPosts() {
+      try {
+        const res = await fetch('posts/posts.json');
+        if (!res.ok) throw new Error('Failed to load posts.json');
+        allPosts = await res.json();
+        // Sort newest first
+        allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        renderGrid(allPosts);
+      } catch (err) {
+        document.getElementById('trip-grid').innerHTML =
+          '<p class="archive-empty">Couldn\'t load posts. Make sure posts/posts.json exists.</p>';
+        console.error(err);
+      }
+    }
+
+    // ── Filter logic ──
+    function filterPosts(filter) {
+      if (filter === 'all') return allPosts;
+      const keywords = FILTER_KEYWORDS[filter] || [];
+      return allPosts.filter(post => {
+        const haystack = (post.tag + ' ' + post.title + ' ' + post.description).toLowerCase();
+        return keywords.some(kw => haystack.includes(kw));
+      });
+    }
+
+    // ── Render ──
+    function renderGrid(posts) {
+      const grid = document.getElementById('trip-grid');
+      const count = document.getElementById('archive-count');
+
+      count.textContent = posts.length === 1
+        ? '1 post'
+        : `${posts.length} posts`;
+
+      if (posts.length === 0) {
+        grid.innerHTML = '<p class="archive-empty">No posts in this category yet — check back soon.</p>';
+        return;
+      }
+
+      grid.innerHTML = posts.map((post, i) => `
+        <a href="${post.slug}" class="trip-card" style="animation-delay: ${i * 60}ms"
+           data-categories="${getCategoryClasses(post)}">
+          <div class="trip-card-img-wrap">
+            <img class="trip-card-img"
+                 src="${post.image}"
+                 alt="${post.imageAlt}"
+                 loading="lazy" />
+          </div>
+          <div class="trip-card-body">
+            <p class="trip-card-tag">${post.tag}</p>
+            <h2 class="trip-card-title">${post.title}</h2>
+            <p class="trip-card-desc">${post.description}</p>
+          </div>
+          <div class="trip-card-footer">
+            <span class="trip-card-date">${post.dateDisplay}</span>
+            <span class="trip-card-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    function getCategoryClasses(post) {
+      const haystack = (post.tag + ' ' + post.title + ' ' + post.description).toLowerCase();
+      return Object.keys(FILTER_KEYWORDS)
+        .filter(key => FILTER_KEYWORDS[key].some(kw => haystack.includes(kw)))
+        .join(' ');
+    }
+
+    // ── Filter button interactions ──
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderGrid(filterPosts(activeFilter));
+      });
+    });
+
+    loadPosts();
+  </script>
+
+</body>
+</html>
