@@ -1,15 +1,5 @@
 [
   {
-    "slug": "posts/2025_11_Hawaii.html",
-    "title": "Maui, Hawaii: Insert tag title line",
-    "tag": "Maui · Hawaii",
-    "description": "Insert description",
-    "date": "2025-11-08",
-    "dateDisplay": "November 2025",
-    "image": "https://images.unsplash.com/photo-1471513671800-b09c87e1497c?w=800&q=75",
-    "imageAlt": "Forest trail hiking"
-  },
-  {
     "slug": "posts/switzerland-lauterbrunnen.html",
     "title": "Lauterbrunnen: Waterfalls, Alpine Ridges & Glacial Lakes",
     "tag": "Switzerland · 7 Days",
@@ -20,12 +10,22 @@
     "imageAlt": "Lauterbrunnen valley Switzerland"
   },
   {
-    "slug": "posts/points-strategy.html",
-    "title": "How We Booked Europe on Miles (And You Can Too)",
-    "tag": "Points & Miles · Strategy",
-    "description": "A plain-English breakdown of the credit card strategy, transfer partners, and booking tricks that funded this trip.",
-    "date": "2025-05-20",
-    "dateDisplay": "May 2025",
+    "slug": "posts/2025_11_Hawaii.html",
+    "title": "Maui: Insert tag title line",
+    "tag": "Hawaii · 8 days",
+    "description": "Insert description",
+    "date": "2025-11-08",
+    "dateDisplay": "November 2025",
+    "image": "https://images.unsplash.com/photo-1471513671800-b09c87e1497c?w=800&q=75",
+    "imageAlt": "Forest trail hiking"
+  },
+  {
+    "slug": "posts/2025_08_Colorado.html",
+    "title": "Rocky Mountains: Insert tag title line",
+    "tag": "Colorado · 4 days",
+    "description": "Insert description",
+    "date": "2025-08-27",
+    "dateDisplay": "August 2025",
     "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=75",
     "imageAlt": "Airplane wing over clouds"
   }
