@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "posts/switzerland-lauterbrunnen.html",
+    "title": "Lauterbrunnen: Waterfalls, Alpine Ridges & Glacial Lakes",
+    "tag": "Switzerland · 7 Days",
+    "description": "Hiking the Northface Trail, chasing sunrise at Bachalpsee, and everything in between in the Bernese Oberland.",
+    "date": "2025-05-31",
+    "dateDisplay": "May 2025",
+    "image": "https://images.unsplash.com/photo-1531400158697-004338570c34?w=800&q=75",
+    "imageAlt": "Lauterbrunnen valley Switzerland"
+  },
+  {
+    "slug": "posts/points-strategy.html",
+    "title": "How We Booked Europe on Miles (And You Can Too)",
+    "tag": "Points & Miles · Strategy",
+    "description": "A plain-English breakdown of the credit card strategy, transfer partners, and booking tricks that funded this trip.",
+    "date": "2025-05-20",
+    "dateDisplay": "May 2025",
+    "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=75",
+    "imageAlt": "Airplane wing over clouds"
+  },
+  {
+    "slug": "posts/noble-knob-corral-pass.html",
+    "title": "Noble Knob at Corral Pass: The Best Mt. Rainier View You've Never Heard Of",
+    "tag": "Pacific Northwest · Day Hike",
+    "description": "An underrated gem near Enumclaw with sweeping Rainier views and almost no crowds. Worth every mile.",
+    "date": "2025-04-12",
+    "dateDisplay": "April 2025",
+    "image": "https://images.unsplash.com/photo-1471513671800-b09c87e1497c?w=800&q=75",
+    "imageAlt": "Forest trail hiking"
+  }
+]
