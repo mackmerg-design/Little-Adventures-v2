@@ -618,15 +618,17 @@
         const hasPost = countryPosts.length > 0;
         const icon = hasPost ? iconPosted : iconVisited;
 
+        // Build popup links — use mapLabel + dateDisplay for link text.
+        // For U.S. posts, prefix with region for clarity (e.g. "Hawaii: Maui — November 2025").
         const tripsHtml = hasPost
-          ? `<div class="popup-trips">${countryPosts.map(p =>
-              `<a class="popup-trip-link" href="${p.slug}">→ ${p.title} · ${p.dateDisplay}</a>`
-            ).join('')}</div>`
+          ? `<div class="popup-trips">${countryPosts.map(p => {
+              const label = (p.region ? p.region + ': ' : '') + (p.mapLabel || p.title) + ' — ' + p.dateDisplay;
+              return `<a class="popup-trip-link" href="${p.slug}">→ ${label}</a>`;
+            }).join('')}</div>`
           : `<p class="popup-no-post">Post coming soon</p>`;
 
         const popupContent = `
           <div class="popup-country">${country.name}</div>
-          <p class="popup-tagline">${country.tagline}</p>
           ${tripsHtml}
         `;
 
