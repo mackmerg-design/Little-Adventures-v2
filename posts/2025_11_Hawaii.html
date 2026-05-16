@@ -110,24 +110,34 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 500;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: #C8D4C9; /* was 65% white — failed; now passes on dark overlay */
+      color: #fff;
       text-decoration: none;
-      margin-bottom: 1.5rem;
-      transition: color 0.2s;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 0.5px solid rgba(255, 255, 255, 0.18);
+      transition: background 0.2s;
     }
-    .post-back:hover { color: var(--white); }
-
+    .post-back:hover {
+      background: rgba(0, 0, 0, 0.52);
+    }
     .post-tag {
+      display: inline-flex;
+      align-items: center;
       font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
+      font-weight: 600;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: #D9C4A8;
-      margin-bottom: 0.8rem;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 0.5px solid rgba(255, 255, 255, 0.18);
+      margin-bottom: 1rem;
     }
     .post-title {
       font-family: 'Playfair Display', serif;
