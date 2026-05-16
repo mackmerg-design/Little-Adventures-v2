@@ -16,8 +16,8 @@
     "description": "No bad views, no bad eats",
     "date": "2025-11-08",
     "dateDisplay": "November 2025",
-    "image": "images/2025-11_Hawaii_Pipiwai_Trail.jpg",
-    "imageAlt": "Forest trail hiking"
+    "image": "https://mackmerg-design.github.io/Little-Adventures/images/2025-11_Hawaii_Pipiwai_Trail.jpg",
+    "imageAlt": "Rain forest with waterfall"
   },
   {
     "slug": "posts/2025_08_Colorado.html",
