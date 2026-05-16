@@ -7,7 +7,8 @@
     "date": "2026-05-23",
     "dateDisplay": "May 2026",
     "image": "https://images.unsplash.com/photo-1531400158697-004338570c34?w=800&q=75",
-    "imageAlt": "Lauterbrunnen valley Switzerland."
+    "imageAlt": "Lauterbrunnen valley Switzerland.",
+    "country": "Switzerland"
   },
   {
     "slug": "posts/2025_11_Hawaii.html",
@@ -17,7 +18,8 @@
     "date": "2025-11-08",
     "dateDisplay": "November 2025",
     "image": "https://mackmerg-design.github.io/Little-Adventures/images/2025-11_Hawaii_Pipiwai_Trail.jpg",
-    "imageAlt": "Rain forest with waterfall"
+    "imageAlt": "Rain forest with waterfall",
+    "country": "United States"
   },
   {
     "slug": "posts/2025_08_Colorado.html",
@@ -27,6 +29,7 @@
     "date": "2025-08-27",
     "dateDisplay": "August 2025",
     "image": "https://mackmerg-design.github.io/Little-Adventures/images/2025-08_Rocky_Mt.jpg",
-    "imageAlt": "Hikers in front of a mountain view"
+    "imageAlt": "Hikers in front of a mountain view",
+    "country": "United States"
   }
 ]
