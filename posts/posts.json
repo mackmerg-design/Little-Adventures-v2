@@ -1,5 +1,15 @@
 [
   {
+    "slug": "posts/2025_11_Maui.html",
+    "title": "Noble Knob at Corral Pass: The Best Mt. Rainier View You've Never Heard Of",
+    "tag": "Pacific Northwest · Day Hike",
+    "description": "An underrated gem near Enumclaw with sweeping Rainier views and almost no crowds. Worth every mile.",
+    "date": "2025-04-12",
+    "dateDisplay": "2026 November",
+    "image": "https://images.unsplash.com/photo-1471513671800-b09c87e1497c?w=800&q=75",
+    "imageAlt": "Forest trail hiking"
+  },
+  {
     "slug": "posts/switzerland-lauterbrunnen.html",
     "title": "Lauterbrunnen: Waterfalls, Alpine Ridges & Glacial Lakes",
     "tag": "Switzerland · 7 Days",
@@ -18,15 +28,5 @@
     "dateDisplay": "May 2025",
     "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=75",
     "imageAlt": "Airplane wing over clouds"
-  },
-  {
-    "slug": "posts/noble-knob-corral-pass.html",
-    "title": "Noble Knob at Corral Pass: The Best Mt. Rainier View You've Never Heard Of",
-    "tag": "Pacific Northwest · Day Hike",
-    "description": "An underrated gem near Enumclaw with sweeping Rainier views and almost no crowds. Worth every mile.",
-    "date": "2025-04-12",
-    "dateDisplay": "April 2025",
-    "image": "https://images.unsplash.com/photo-1471513671800-b09c87e1497c?w=800&q=75",
-    "imageAlt": "Forest trail hiking"
   }
 ]
