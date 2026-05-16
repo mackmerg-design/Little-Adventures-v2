@@ -71,10 +71,9 @@
       text-decoration: none;
       transition: color 0.3s;
     }
-    nav.scrolled .nav-links a { color: #4A4F4A; } /* darkened from --muted for 4.5:1 on white */
+    nav.scrolled .nav-links a { color: #4A4F4A; }
     .nav-links a:hover { color: #F5E0D0; }
     nav.scrolled .nav-links a:hover { color: var(--rust); }
-    /* Focus indicators — WCAG 2.4.7 / 2.4.11 */
     :focus-visible {
       outline: 3px solid var(--rust);
       outline-offset: 3px;
@@ -119,7 +118,7 @@
       font-weight: 500;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: #C8D4C9; /* was rgba(255,255,255,0.7) — failed contrast; now passes 4.5:1 on dark overlay */
+      color: #C8D4C9;
       margin-bottom: 1rem;
     }
     .hero-title {
@@ -137,7 +136,7 @@
       font-size: 1rem;
       font-weight: 300;
       line-height: 1.6;
-      color: #E8EDE8; /* was rgba(255,255,255,0.78) — borderline fail; solid value passes */
+      color: #E8EDE8;
       margin-bottom: 2rem;
       max-width: 460px;
     }
@@ -181,6 +180,29 @@
     .featured {
       background: var(--cream);
     }
+    .featured-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 3.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .featured-header .section-title { margin-bottom: 0; }
+    .all-trips-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--rust);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s;
+      padding-bottom: 0.1em;
+      border-bottom: 1px solid var(--rust);
+    }
+    .all-trips-link:hover { color: #9A4415; border-bottom-color: #9A4415; }
+
     .trip-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -225,7 +247,7 @@
       font-size: 0.88rem;
       font-weight: 300;
       line-height: 1.65;
-      color: #4E5550; /* was --muted #6B7569 which is ~3.8:1; this hits 4.5:1 on white */
+      color: #4E5550;
     }
     .trip-card-footer {
       padding: 1rem 1.5rem;
@@ -236,7 +258,7 @@
     }
     .trip-card-date {
       font-size: 0.75rem;
-      color: #4E5550; /* darkened from --muted for 4.5:1 */
+      color: #4E5550;
       letter-spacing: 0.05em;
     }
     .trip-card-arrow {
@@ -245,6 +267,34 @@
       transition: transform 0.25s;
     }
     .trip-card:hover .trip-card-arrow { transform: translateX(4px); }
+
+    /* Skeleton placeholder cards shown while posts.json loads */
+    .trip-card-skeleton {
+      background: var(--white);
+      overflow: hidden;
+    }
+    .skeleton-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--sand);
+      animation: shimmer 1.4s infinite;
+    }
+    .skeleton-body { padding: 1.5rem; }
+    .skeleton-line {
+      height: 0.75rem;
+      border-radius: 2px;
+      background: var(--sand);
+      margin-bottom: 0.75rem;
+      animation: shimmer 1.4s infinite;
+    }
+    .skeleton-line.short { width: 45%; }
+    .skeleton-line.long  { width: 80%; }
+    .skeleton-line.full  { width: 100%; }
+    @keyframes shimmer {
+      0%   { opacity: 1; }
+      50%  { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
 
     /* ── ABOUT STRIP ── */
     .about-strip {
@@ -259,12 +309,10 @@
       font-size: 0.95rem;
       font-weight: 300;
       line-height: 1.75;
-      color: #C8D4C9; /* was rgba at 75% — improved for contrast on --forest bg */
+      color: #C8D4C9;
       margin-bottom: 1.75rem;
     }
-    .about-img-wrap {
-      position: relative;
-    }
+    .about-img-wrap { position: relative; }
     .about-img {
       width: 100%;
       aspect-ratio: 3/4;
@@ -285,7 +333,6 @@
       gap: 2.5rem;
       margin-top: 2rem;
     }
-    .stat { }
     .stat-num {
       font-family: 'Playfair Display', serif;
       font-size: 2.2rem;
@@ -296,14 +343,14 @@
       font-size: 0.75rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #9EBDA0; /* was 50% opacity on forest — failed; this passes 4.5:1 on --forest */
+      color: #9EBDA0;
       margin-top: 0.25rem;
     }
 
     /* ── FOOTER ── */
     footer {
       background: var(--text);
-      color: #A8B4A9; /* was 55% opacity — failed; this passes 4.5:1 on --text bg */
+      color: #A8B4A9;
       padding: 3rem;
       display: flex;
       align-items: center;
@@ -318,11 +365,12 @@
     }
     .footer-note { font-size: 0.78rem; }
 
-    /* ── REDUCED MOTION — WCAG 2.3.3 ── */
+    /* ── REDUCED MOTION ── */
     @media (prefers-reduced-motion: reduce) {
       .hero-bg { animation: none; }
       .hero-content { animation: none; opacity: 1; transform: none; }
       .trip-card, .trip-card-img, .trip-card-arrow, .btn-primary { transition: none; }
+      .skeleton-img, .skeleton-line { animation: none; }
     }
 
     /* ── RESPONSIVE ── */
@@ -343,7 +391,7 @@
   <nav id="nav" aria-label="Main navigation">
     <a href="#" class="nav-logo">Little Adventures</a>
     <ul class="nav-links">
-      <li><a href="#trips">Trips</a></li>
+      <li><a href="trips.html">Trips</a></li>
       <li><a href="#about">About</a></li>
     </ul>
   </nav>
@@ -363,64 +411,39 @@
 
   <!-- TRIP POSTS -->
   <section class="featured" id="trips">
-    <p class="section-label">Recent Adventures</p>
-    <h2 class="section-title">Where We've Been</h2>
-    <div class="trip-grid">
-
-      <!-- Card 1 — Switzerland (your upcoming trip!) -->
-      <a href="posts/trip-template.html" class="trip-card">
-        <div class="trip-card-img-wrap">
-          <img class="trip-card-img"
-               src="https://images.unsplash.com/photo-1531400158697-004338570c34?w=800&q=75"
-               alt="Lauterbrunnen valley Switzerland" loading="lazy" />
+    <div class="featured-header">
+      <div>
+        <p class="section-label">Recent Adventures</p>
+        <h2 class="section-title">Where We've Been</h2>
+      </div>
+      <a href="trips.html" class="all-trips-link">All Trips →</a>
+    </div>
+    <div class="trip-grid" id="trip-grid" aria-live="polite">
+      <!-- Skeleton placeholders shown while JSON loads -->
+      <div class="trip-card-skeleton" aria-hidden="true">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line full"></div>
         </div>
-        <div class="trip-card-body">
-          <p class="trip-card-tag">Switzerland · 7 days</p>
-          <h3 class="trip-card-title">Lauterbrunnen: Waterfalls, Alpine Ridges &amp; Glacial Lakes</h3>
-          <p class="trip-card-desc">Hiking the Northface Trail, chasing sunrise at Bachalpsee, and everything in between in the Bernese Oberland.</p>
+      </div>
+      <div class="trip-card-skeleton" aria-hidden="true">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line full"></div>
         </div>
-        <div class="trip-card-footer">
-          <span class="trip-card-date">May 2025</span>
-          <span class="trip-card-arrow">→</span>
+      </div>
+      <div class="trip-card-skeleton" aria-hidden="true">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line full"></div>
         </div>
-      </a>
-
-      <!-- Card 2 — Points post placeholder -->
-      <a href="posts/points-strategy.html" class="trip-card">
-        <div class="trip-card-img-wrap">
-          <img class="trip-card-img"
-               src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=75"
-               alt="Airplane wing over clouds" loading="lazy" />
-        </div>
-        <div class="trip-card-body">
-          <p class="trip-card-tag">Points &amp; Miles · Strategy</p>
-          <h3 class="trip-card-title">How We Booked Europe on Miles (And You Can Too)</h3>
-          <p class="trip-card-desc">A plain-English breakdown of the credit card strategy, transfer partners, and booking tricks that funded this trip.</p>
-        </div>
-        <div class="trip-card-footer">
-          <span class="trip-card-date">May 2025</span>
-          <span class="trip-card-arrow">→</span>
-        </div>
-      </a>
-
-      <!-- Card 3 — Placeholder for next trip -->
-      <a href="#" class="trip-card">
-        <div class="trip-card-img-wrap">
-          <img class="trip-card-img"
-               src="https://images.unsplash.com/photo-1471513671800-b09c87e1497c?w=800&q=75"
-               alt="Forest trail hiking" loading="lazy" />
-        </div>
-        <div class="trip-card-body">
-          <p class="trip-card-tag">Pacific Northwest · Day Hike</p>
-          <h3 class="trip-card-title">Noble Knob at Corral Pass: The Best Mt. Rainier View You've Never Heard Of</h3>
-          <p class="trip-card-desc">An underrated gem near Enumclaw with sweeping Rainier views and almost no crowds. Worth every mile.</p>
-        </div>
-        <div class="trip-card-footer">
-          <span class="trip-card-date">Coming soon</span>
-          <span class="trip-card-arrow">→</span>
-        </div>
-      </a>
-
+      </div>
     </div>
   </section>
 
@@ -438,7 +461,7 @@
         </div>
         <div class="stat">
           <div class="stat-num">Millions</div>
-          <div class="stat-label">Miles & Points Burned</div>
+          <div class="stat-label">Miles &amp; Points Burned</div>
         </div>
         <div class="stat">
           <div class="stat-num">40k</div>
@@ -463,11 +486,54 @@
   </footer>
 
   <script>
-    // Sticky nav style on scroll
+    // ── Sticky nav ──
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 60);
     });
+
+    // ── Load the 3 latest posts from the manifest ──
+    async function loadLatestPosts() {
+      const grid = document.getElementById('trip-grid');
+      try {
+        const res = await fetch('posts/posts.json');
+        if (!res.ok) throw new Error('posts.json not found');
+        const posts = await res.json();
+
+        // Sort newest first, take top 3
+        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const latest = posts.slice(0, 3);
+
+        grid.innerHTML = latest.map(post => `
+          <a href="${post.slug}" class="trip-card">
+            <div class="trip-card-img-wrap">
+              <img class="trip-card-img"
+                   src="${post.image}"
+                   alt="${post.imageAlt}"
+                   loading="lazy" />
+            </div>
+            <div class="trip-card-body">
+              <p class="trip-card-tag">${post.tag}</p>
+              <h3 class="trip-card-title">${post.title}</h3>
+              <p class="trip-card-desc">${post.description}</p>
+            </div>
+            <div class="trip-card-footer">
+              <span class="trip-card-date">${post.dateDisplay}</span>
+              <span class="trip-card-arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+        `).join('');
+      } catch (err) {
+        // Graceful fallback — show a message instead of broken skeletons
+        grid.innerHTML = `
+          <p style="grid-column:1/-1; color:#4E5550; font-size:0.9rem; font-weight:300; padding:2rem 0;">
+            Posts coming soon — check back after the trip!
+          </p>`;
+        console.warn('Could not load posts.json:', err);
+      }
+    }
+
+    loadLatestPosts();
   </script>
 
 </body>
