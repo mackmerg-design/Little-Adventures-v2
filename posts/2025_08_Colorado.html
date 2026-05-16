@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trip Title · Little Adventures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script> 
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:   #2C3B2D;
+      --stone:    #8B7D6B;
+      --cream:    #F5F0E8;
+      --sand:     #E8DFD0;
+      --moss:     #4A6741;
+      --rust:     #B5531A;
+      --white:    #FDFCFA;
+      --text:     #1E2420;
+      --muted:    #6B7569;
+    }
+
+    html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(253,252,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sand);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--forest);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.25rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #4A4F4A;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--rust); }
+    /* Focus indicators — WCAG 2.4.7 / 2.4.11 */
+    :focus-visible {
+      outline: 3px solid var(--rust);
+      outline-offset: 3px;
+    }
+
+    /* ── HERO ── */
+    .post-hero {
+      position: relative;
+      height: 85svh;
+      min-height: 520px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .post-hero-bg {
+      position: absolute;
+      inset: 0;
+      /* REPLACE the URL below with your own hero photo */
+      background:
+        linear-gradient(to bottom,
+          rgba(20,30,22,0.25) 0%,
+          rgba(20,30,22,0.45) 40%,
+          rgba(20,30,22,0.82) 100%),
+        url('https://images.unsplash.com/photo-1531400158697-004338570c34?w=1600&q=80') center/cover no-repeat;
+    }
+    .post-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 3rem 5rem;
+      max-width: 780px;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.9s 0.3s forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    .post-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #C8D4C9; /* was 65% white — failed; now passes on dark overlay */
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      transition: color 0.2s;
+    }
+    .post-back:hover { color: var(--white); }
+
+    .post-tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #D9C4A8;
+      margin-bottom: 0.8rem;
+    }
+    .post-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+    }
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .post-meta-item {
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: #C8D4C9; /* was rgba 65% white — failed; passes on dark hero overlay */
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .post-meta-item svg { width: 1rem; height: 1rem; stroke: currentColor; } /* Size the icons to match the text */
+    
+    /* ── TRIP STATS BAR ── */
+    .trip-stats {
+      background: var(--forest);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+    .trip-stat {
+      padding: 1.75rem 3rem;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      flex: 1;
+      min-width: 140px;
+    }
+    .trip-stat:last-child { border-right: none; }
+    .trip-stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--cream);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .trip-stat-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #9EBDA0; /* was 45% opacity — failed; passes 4.5:1 on --forest */
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .post-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 5rem;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 5rem 3rem;
+      align-items: start;
+    }
+
+    /* ── ARTICLE BODY ── */
+    .post-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      color: var(--forest);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    .post-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--forest);
+      margin: 2rem 0 0.6rem;
+    }
+    .post-body p {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: #3A3F3A;
+      margin-bottom: 1.25rem;
+    }
+    .post-body p:first-child {
+      font-size: 1.15rem;
+      color: var(--text);
+    }
+    .post-body ul, .post-body ol {
+      margin: 0.5rem 0 1.25rem 1.5rem;
+    }
+    .post-body li {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: #3A3F3A;
+      margin-bottom: 0.3rem;
+    }
+    .post-body strong { font-weight: 500; color: var(--text); }
+
+    /* Pull quote */
+    .pullquote {
+      border-left: 3px solid var(--rust);
+      margin: 2.5rem 0;
+      padding: 1rem 1.75rem;
+      background: var(--cream);
+    }
+    .pullquote p {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.2rem !important;
+      line-height: 1.55 !important;
+      color: var(--forest) !important;
+      margin: 0 !important;
+    }
+
+    /* Section divider */
+    .post-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 3rem 0;
+      color: var(--stone);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .post-divider::before, .post-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--sand);
+    }
+
+    /* ── PHOTO GALLERY ── */
+    .photo-gallery {
+      margin: 2.5rem 0;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .gallery-2col {
+      grid-template-columns: 1fr 1fr;
+    }
+    .gallery-3col {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+    .gallery-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s;
+      cursor: zoom-in;
+    }
+    .gallery-img:hover { transform: scale(1.01); }
+    .gallery-img.tall { aspect-ratio: 3/4; }
+    .gallery-caption {
+      font-size: 0.75rem;
+      color: #4E5550; /* was --muted; darkened to pass 4.5:1 on white */
+      text-align: center;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* Single wide photo */
+    .photo-full {
+      margin: 2.5rem 0;
+    }
+    .photo-full img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-full figcaption {
+      font-size: 0.75rem;
+      color: #4E5550;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* ── POINTS BOX ── */
+    .points-box {
+      background: var(--cream);
+      border: 1px solid var(--sand);
+      padding: 2rem;
+      margin: 2.5rem 0;
+    }
+    .points-box-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.75rem;
+    }
+    .points-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--forest);
+      margin-bottom: 1rem;
+    }
+    .points-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .points-table td {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--sand);
+      color: #3A3F3A;
+      font-weight: 300;
+    }
+    .points-table td:last-child {
+      text-align: right;
+      font-weight: 500;
+      color: var(--forest);
+    }
+    .points-table tr:last-child td { border-bottom: none; }
+    .points-total td {
+      padding-top: 0.9rem !important;
+      font-weight: 500 !important;
+      color: var(--forest) !important;
+      border-top: 2px solid var(--forest) !important;
+    }
+
+    /* ── SIDEBAR ── */
+    .post-sidebar {
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    .sidebar-card {
+      background: var(--cream);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .sidebar-card-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 1rem;
+    }
+    .sidebar-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--forest);
+      margin-bottom: 0.75rem;
+    }
+    .sidebar-list {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar-list li {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: #4E5550; /* was --muted; darkened for contrast on --cream bg */
+      padding: 0.45rem 0;
+      border-bottom: 1px solid var(--sand);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.4;
+    }
+    .sidebar-list li:last-child { border-bottom: none; }
+    .sidebar-list li::before {
+      content: '→';
+      color: var(--rust);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .sidebar-tip {
+      font-size: 0.85rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: #4E5550; /* was --muted; darkened for contrast on --cream */
+    }
+    .sidebar-tip strong { color: var(--forest); font-weight: 500; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: #A8B4A9; /* was 55% opacity — failed; passes 4.5:1 on --text */
+      padding: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--cream);
+      text-decoration: none;
+    }
+    .footer-note { font-size: 0.78rem; }
+
+    /* ── REDUCED MOTION — WCAG 2.3.3 ── */
+    @media (prefers-reduced-motion: reduce) {
+      .post-hero-content { animation: none; opacity: 1; transform: none; }
+      .gallery-img, .post-back { transition: none; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .post-layout { grid-template-columns: 1fr; gap: 3rem; padding: 3.5rem 1.5rem; }
+      .post-sidebar { position: static; }
+      nav { padding: 1rem 1.5rem; }
+      .post-hero-content { padding: 0 1.5rem 3.5rem; }
+      .gallery-3col { grid-template-columns: 1fr 1fr; }
+      .trip-stat { padding: 1.5rem 1.5rem; }
+      footer { flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 520px) {
+      .gallery-2col, .gallery-3col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav" aria-label="Main navigation">
+    <a href="../index.html" class="nav-logo">Little Adventures</a>
+    <ul class="nav-links">
+      <li><a href="../trips.html">Trips</a></li>
+      <li><a href="../index.html#about">About</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+  <!-- HERO -->
+  <section class="post-hero" aria-label="Trip introduction">
+    <div class="post-hero-bg"></div>
+    <div class="post-hero-content">
+      <a href="../trips.html" class="post-back">← All Trips</a>
+      <!-- EDIT: destination and duration tag -->
+      <p class="post-tag">Rocky Mountains · 4 Days · August 2025</p>
+      <!-- EDIT: post title -->
+      <h1 class="post-title">Rocky Moutains National Park</h1>
+      <div class="post-meta">
+        <span class="post-meta-item"><i data-lucide="calendar"></i> August 27 – 31, 2025</span>
+        <span class="post-meta-item"><i data-lucide="users"></i> Nicholas, Mackenzie &amp; Jake</span>
+        <span class="post-meta-item"><i data-lucide="footprints"></i> 4 hikes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRIP STATS BAR -->
+  <!-- EDIT: update these numbers to match your trip -->
+  <div class="trip-stats">
+    <div class="trip-stat">
+      <div class="trip-stat-value">4</div>
+      <div class="trip-stat-label">Days</div>
+    </div>
+    <div class="trip-stat">
+      <div class="trip-stat-value">15.7 mi</div>
+      <div class="trip-stat-label">Hiked</div>
+    </div>
+    <div class="trip-stat">
+      <div class="trip-stat-value">2.7k ft</div>
+      <div class="trip-stat-label">Elevation Gain</div>
+    </div>
+    <div class="trip-stat">
+      <div class="trip-stat-value">Xk</div>
+      <div class="trip-stat-label">Points Used</div>
+    </div>
+    <div class="trip-stat">
+      <div class="trip-stat-value">~$X</div>
+      <div class="trip-stat-label">Out of Pocket</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="post-layout">
+
+    <!-- ARTICLE -->
+    <article class="post-body">
+
+      <!-- INTRO -->
+      <!-- EDIT: Replace all content below with your actual trip writing -->
+      <p>The Lauterbrunnen Valley doesn't ease you in. You round a bend in the road and suddenly there it is — a sheer limestone amphitheater with 72 waterfalls pouring off its walls, and the kind of silence you only get when everything around you is so enormous it absorbs sound. We had 7 days based here, and it wasn't enough.</p>
+
+      <p>This post covers every hike we did, what surprised us, and how we funded the whole thing with points. If you're planning a Swiss Alps trip, I hope it's useful. If you're just here for the photos — same, honestly.</p>
+
+      <!-- PHOTO: Single wide -->
+      <figure class="photo-full">
+        <!-- EDIT: Replace src with your own photo -->
+        <img src="https://images.unsplash.com/photo-1531400158697-004338570c34?w=1200&q=80" alt="Lauterbrunnen valley" />
+        <figcaption>The view down the Lauterbrunnen Valley from the Northface Trail. This was day two.</figcaption>
+      </figure>
+
+      <!-- SECTION 1 -->
+      <h2>The Hikes</h2>
+
+      <p>We structured each day around a single big hike, which gave us time to actually move through the landscape instead of rushing. Here's how it broke down:</p>
+
+      <div class="post-divider">Day by Day</div>
+
+      <h3>Northface Trail (Mürren to Grütschalp)</h3>
+      <p>This was our first real day on trail and it set the bar impossibly high. The path hugs the cliff face above the valley floor with unobstructed views of the Eiger, Mönch, and Jungfrau the entire way. Low traffic, well-marked, and absolutely relentless in the best way.</p>
+
+      <!-- PHOTO: 2-column gallery -->
+      <div class="photo-gallery gallery-2col">
+        <!-- EDIT: Replace with your own photos -->
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=75" alt="Northface Trail view" />
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=75" alt="Alpine meadow" />
+      </div>
+      <p class="gallery-caption">Left: Looking back toward Mürren. Right: One of many meadow sections mid-trail.</p>
+
+      <h3>Grindelwald First &amp; Bachalpsee</h3>
+      <p>We took the gondola up to First, then hiked out to Bachalpsee — a glacial lake at 2,265m that perfectly mirrors the surrounding peaks on a calm morning. We hit it around 9am before the day-trippers arrived and had it almost to ourselves. Worth every early alarm.</p>
+
+      <div class="pullquote">
+        <p>"Standing at Bachalpsee at 9am with the Schreckhorn reflected in the water and almost no one else around — that's the kind of moment that makes the trip planning worth it."</p>
+      </div>
+
+      <h3>Männlichen Royal Walk</h3>
+      <p>A gentler ridge walk with enormous payoff. The trail from Männlichen to Kleine Scheidegg is almost entirely flat and panoramic the whole way. Great option if your legs are tired from previous days — ours absolutely were.</p>
+
+      <!-- PHOTO: 3-column gallery -->
+      <div class="photo-gallery gallery-3col">
+        <!-- EDIT: Replace with your own photos -->
+        <img class="gallery-img tall" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=75" alt="Mountain panorama" />
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1471513671800-b09c87e1497c?w=800&q=75" alt="Trail path" />
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=800&q=75" alt="Alpine flowers" />
+      </div>
+      <p class="gallery-caption">The Royal Walk delivers wide open ridge views the entire way to Kleine Scheidegg.</p>
+
+      <!-- SECTION 2 -->
+      <div class="post-divider">The Financial Side</div>
+      <h2>How We Paid For It</h2>
+
+      <p>Switzerland is not cheap. Even with aggressive point usage, you have to go in with eyes open about daily costs. Here's a transparent breakdown of what we used and what came out of pocket.</p>
+
+      <!-- POINTS BOX -->
+      <div class="points-box">
+        <p class="points-box-label">Points &amp; Miles Breakdown</p>
+        <h3>How We Funded This Trip</h3>
+        <table class="points-table">
+          <tr>
+            <td>Flights (SEA → OGG → SEA)</td>
+            <td>52,000 Alaska miles + $86 in fees</td>
+          </tr>
+          <tr>
+            <td>Hotel — Hotel Staubbach, Lauterbrunnen (6 nights)</td>
+            <td>Paid cash (~$180/night)</td>
+          </tr>
+          <tr>
+            <td>Hotel — Helsinki (1 night)</td>
+            <td>20,000 Hyatt points</td>
+          </tr>
+          <tr>
+            <td>Swiss Travel Pass (rail, gondolas, buses)</td>
+            <td>$260/person paid cash</td>
+          </tr>
+          <tr class="points-total">
+            <td>Total out of pocket (2 people)</td>
+            <td>~$1,060</td>
+          </tr>
+        </table>
+      </div>
+
+      <p>The Alaska miles came from a combination of the Alaska Airlines Visa welcome bonus and a Bank of America transfer. The Hyatt points were from the World of Hyatt card welcome offer. Neither required any manufactured spending — just intentional card use over about 8 months.</p>
+
+      <p>If you want a full post on the card strategy, I'm planning to write that separately since there's a lot to cover.</p>
+
+      <!-- SECTION 3 -->
+      <div class="post-divider">Final Thoughts</div>
+      <h2>Would We Go Back?</h2>
+
+      <p>In a heartbeat. The Bernese Oberland rewards slow travel — the more time you give it, the more it gives back. We'd skip the Swiss Travel Pass next time and buy point-to-point tickets instead, and we'd add at least two more nights to get to Oeschinensee properly. But those are good problems to have.</p>
+
+      <p>If you have any questions about any of this — logistics, hikes, points strategy, packing — feel free to reach out. We're happy to share what we know.</p>
+
+    </article>
+
+    <!-- SIDEBAR -->
+    <aside class="post-sidebar">
+
+      <!-- Quick facts -->
+      <div class="sidebar-card">
+        <p class="sidebar-card-label">Trip Snapshot</p>
+        <ul class="sidebar-list">
+          <li>Base: Etes Park, Colorado</li>
+          <li>Dates: August 27 – 31, 2025</li>
+          <li>Flights: SEA → DEN</li>
+          <li>Return: DEN → SEA</li>
+          <li>Best hike: Northface Trail</li>
+          <li>Hardest day: Schilthorn summit</li>
+          <li>Favorite meal: Raclette in Mürren</li>
+        </ul>
+      </div>
+
+      <!-- Hikes list -->
+      <div class="sidebar-card">
+        <p class="sidebar-card-label">All Hikes</p>
+        <ul class="sidebar-list">
+          <li>Northface Trail</li>
+          <li>Grindelwald First + Bachalpsee</li>
+          <li>Männlichen Royal Walk</li>
+          <li>Trümmelbach Falls loop</li>
+          <li>Oeschinensee</li>
+          <li>Schilthorn via Birg</li>
+          <li>Mürren village wander</li>
+        </ul>
+      </div>
+
+      <!-- Pro tip -->
+      <div class="sidebar-card">
+        <p class="sidebar-card-label">Pro Tip</p>
+        <p class="sidebar-tip"><strong>Get the Swiss Travel Pass.</strong> It covers nearly all trains, gondolas, and buses in the region. For a 6-day itinerary hitting multiple valleys, it paid for itself by day three.</p>
+      </div>
+
+    </aside>
+  </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="../index.html" class="footer-logo">Little Adventures</a>
+    <span class="footer-note">© 2026 Nicholas &amp; Mackenzie Little · Made with love from Seattle, WA</span>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>
